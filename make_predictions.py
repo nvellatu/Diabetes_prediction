@@ -1,5 +1,6 @@
 import joblib
 from Diabetes_prediction import convert_to_numeric
+from sklearn.preprocessing import StandardScaler
 
 
 model = joblib.load('trained_model.joblib')
@@ -10,6 +11,7 @@ model = joblib.load('trained_model.joblib')
 
 #Input data directly
 # new_data = ['Female',67.0,0,0,'never',63.48,8.8,155]
+# new_data = ['male',20.0,0,0,'never',20.05,5.5,150]
 
 # OR Ask user for individual data
 print("Enter the following data: ")
@@ -26,7 +28,13 @@ new_data = [gender, age, hypertension, heartdisease, smoking_history, bmi, Hba1c
 #process data and make prediction
 preprocessed_data = [convert_to_numeric(value) for value in new_data]
 
-predictions = model.predict([preprocessed_data])
+#normalize data
+scaler = joblib.load('scaler.joblib')
+# normalized_data = scaler.fit_transform([preprocessed_data])
+normalized_data = scaler.transform([preprocessed_data])
+
+
+predictions = model.predict(normalized_data)
 
 print(predictions[0])
 
